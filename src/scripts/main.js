@@ -50,20 +50,40 @@ function getAllSuccessfulDetails(arrayOfIds) {
   });
 }
 
+const divFirstReceived = document.createElement('div');
+const divAllSuccessful = document.createElement('div');
+
+divFirstReceived.className = 'first-received';
+divAllSuccessful.className = 'all-successful';
+
+divFirstReceived.insertAdjacentHTML('beforeend',
+  `<h3>First Received</h3>`);
+
+divAllSuccessful.insertAdjacentHTML('beforeend',
+  `<h3>All Successful</h3>`);
+
 getPhones()
   .then(result => {
     const arrPhonesId = result.map(el => el.id);
 
     getFirstReceivedDetails(arrPhonesId)
-      .then(firstResolve => firstResolve)
+      .then(firstResolve => {
+        divFirstReceived.insertAdjacentHTML('beforeend',
+          `<li>Name: ${firstResolve.name} (ID:${firstResolve.id})</li>`);
+      })
       .catch();
 
     getAllSuccessfulDetails(arrPhonesId)
       .then(arr => {
         arr.forEach(elem => {
-          elem.then(res => res);
+          elem.then(res => {
+            divAllSuccessful.insertAdjacentHTML('beforeend',
+              `<li>Name: ${res.name} (ID:${res.id})</li>`);
+          });
         });
       })
       .catch();
+
+    document.body.append(divFirstReceived, divAllSuccessful);
   })
   .catch();
